@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# Spark Study
 
-TODO: Document your project here
+TODO: Document your project here.
