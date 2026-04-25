@@ -2,95 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 214 56% 97%;
+    --foreground: 222 35% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 35% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 35% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 212 83% 42%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 184 44% 91%;
+    --secondary-foreground: 196 54% 17%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 216 34% 91%;
+    --muted-foreground: 218 16% 42%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 38 92% 58%;
+    --accent-foreground: 28 62% 14%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 356 72% 52%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 158 58% 39%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 93% 53%;
+    --warning-foreground: 31 66% 12%;
+
+    --border: 214 28% 84%;
+    --input: 214 28% 84%;
+    --ring: 212 83% 42%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --surface-raised: 210 60% 99%;
+    --surface-tinted: 209 82% 94%;
+    --ink-soft: 222 28% 22%;
+    --study-front: 212 77% 46%;
+    --study-back: 176 58% 34%;
+    --grid-line: 214 42% 86%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --gradient-app: linear-gradient(135deg, hsl(214 56% 97%) 0%, hsl(184 44% 91%) 48%, hsl(38 92% 92%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(212 83% 42%), hsl(176 58% 34%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.96), hsl(210 60% 99% / 0.82));
+    --shadow-soft: 0 18px 48px -28px hsl(212 83% 25% / 0.35);
+    --shadow-card: 0 14px 38px -24px hsl(222 35% 12% / 0.3);
+    --shadow-focus: 0 0 0 4px hsl(212 83% 42% / 0.16);
 
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 210 60% 99%;
+    --sidebar-foreground: 222 35% 12%;
+    --sidebar-primary: 212 83% 42%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 184 44% 91%;
+    --sidebar-accent-foreground: 196 54% 17%;
+    --sidebar-border: 214 28% 84%;
+    --sidebar-ring: 212 83% 42%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 222 35% 9%;
+    --foreground: 210 40% 96%;
+    --card: 222 30% 13%;
+    --card-foreground: 210 40% 96%;
+    --popover: 222 30% 13%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 207 88% 66%;
+    --primary-foreground: 222 35% 9%;
+    --secondary: 191 40% 20%;
+    --secondary-foreground: 184 44% 91%;
+    --muted: 222 24% 19%;
+    --muted-foreground: 216 18% 72%;
+    --accent: 38 92% 62%;
+    --accent-foreground: 28 62% 14%;
+    --destructive: 356 72% 57%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 158 58% 48%;
+    --success-foreground: 222 35% 9%;
+    --warning: 35 93% 58%;
+    --warning-foreground: 31 66% 12%;
+    --border: 222 20% 24%;
+    --input: 222 20% 24%;
+    --ring: 207 88% 66%;
+    --surface-raised: 222 30% 13%;
+    --surface-tinted: 212 40% 18%;
+    --ink-soft: 210 28% 84%;
+    --study-front: 207 88% 66%;
+    --study-back: 176 58% 56%;
+    --grid-line: 222 20% 24%;
+    --gradient-app: linear-gradient(135deg, hsl(222 35% 9%) 0%, hsl(212 40% 14%) 56%, hsl(176 42% 13%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(207 88% 66%), hsl(176 58% 56%));
+    --gradient-card: linear-gradient(145deg, hsl(222 30% 13% / 0.96), hsl(222 24% 19% / 0.82));
+    --shadow-soft: 0 18px 48px -28px hsl(0 0% 0% / 0.65);
+    --shadow-card: 0 14px 38px -24px hsl(0 0% 0% / 0.7);
+    --shadow-focus: 0 0 0 4px hsl(207 88% 66% / 0.18);
+    --sidebar-background: 222 30% 13%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 207 88% 66%;
+    --sidebar-primary-foreground: 222 35% 9%;
+    --sidebar-accent: 191 40% 20%;
+    --sidebar-accent-foreground: 184 44% 91%;
+    --sidebar-border: 222 20% 24%;
+    --sidebar-ring: 207 88% 66%;
   }
 }
 
@@ -99,7 +116,39 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
+    background: var(--gradient-app);
+  }
+
+  button, a, input, textarea, select {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+@layer components {
+  .mlfi-shell {
+    background-image:
+      linear-gradient(hsl(var(--grid-line) / 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--grid-line) / 0.35) 1px, transparent 1px),
+      var(--gradient-app);
+    background-size: 44px 44px, 44px 44px, auto;
+  }
+
+  .study-perspective {
+    perspective: 1200px;
+  }
+
+  .study-card-inner {
+    transform-style: preserve-3d;
+  }
+
+  .study-card-face {
+    backface-visibility: hidden;
   }
 }
