@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeftRight,
+  Award,
   BarChart3,
   BookOpen,
   Brain,
@@ -11,6 +12,7 @@ import {
   Image,
   Italic,
   Keyboard,
+  Layers3,
   List,
   Moon,
   Plus,
@@ -22,10 +24,12 @@ import {
   Sparkles,
   Sun,
   Tags,
+  Target,
   Trash2,
   Type,
   Undo2,
   Volume2,
+  Zap,
   X,
 } from "lucide-react";
 
@@ -56,11 +60,29 @@ const initialCards = [
 
 const templates = ["Definition", "Formula", "Q&A", "Diagram"];
 
+const editorTools = [
+  { icon: Type, action: "type", label: "Key term" },
+  { icon: Italic, action: "italic", label: "Emphasis" },
+  { icon: List, action: "list", label: "List" },
+  { icon: Sigma, action: "equation", label: "Equation" },
+  { icon: Image, action: "image", label: "Image cue" },
+  { icon: Volume2, action: "audio", label: "Audio cue" },
+  { icon: Undo2, action: "undo", label: "Undo" },
+  { icon: Redo2, action: "redo", label: "Redo" },
+];
+
 const principles = [
   { title: "Safety", text: "Auto-save, undo/redo, restore history, and delete confirmation reduce costly mistakes." },
   { title: "Utility", text: "Rich text, equations, imagery, audio cues, tags, and templates support real coursework." },
   { title: "Efficiency", text: "One-click creation, shortcuts, smart templates, and inline editing minimize setup effort." },
   { title: "Effectiveness", text: "Flip, quiz, timed review, and spaced repetition address different learning strategies." },
+];
+
+const learningPath = [
+  { label: "Capture", icon: Layers3 },
+  { label: "Encode", icon: Brain },
+  { label: "Recall", icon: Target },
+  { label: "Master", icon: Award },
 ];
 
 const Index = () => {
@@ -93,6 +115,8 @@ const Index = () => {
   );
 
   const activeDeck = decks.find((deck) => deck.name === selectedDeck) ?? decks[0];
+  const deckCards = useMemo(() => cards.filter((card) => card.deck === selectedDeck), [cards, selectedDeck]);
+  const masteryOffset = 158 - (158 * (activeDeck?.progress ?? 0)) / 100;
 
   const stats = [
     { label: "Retention", value: `${retention}%`, icon: Brain },
@@ -139,6 +163,13 @@ const Index = () => {
     setDecks((currentDecks) => [...currentDecks, newDeck]);
     setSelectedDeck(deckName);
     setAutosaveText("New deck created");
+  };
+
+  const selectDeck = (deckName: string) => {
+    setSelectedDeck(deckName);
+    const firstCard = cards.find((card) => card.deck === deckName);
+    if (firstCard) setSelectedCardId(firstCard.id);
+    setFlipped(false);
   };
 
   const confirmDelete = () => {
