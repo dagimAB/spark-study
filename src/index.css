@@ -152,3 +152,9 @@
     backface-visibility: hidden;
   }
 }
+
+@layer utilities {
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
