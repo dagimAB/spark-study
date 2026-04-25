@@ -414,11 +414,24 @@ const Index = () => {
                     <h4 className="font-bold text-foreground">Live preview</h4>
                     <span className="rounded-sm bg-accent px-2 py-1 text-xs font-bold text-accent-foreground">{selectedTemplate}</span>
                   </div>
-                  <div className="mt-4 rounded-md border border-border bg-card p-5 shadow-card">
+                  <div className="mt-4 rounded-md border border-border bg-card p-5 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-soft">
                     <p className="text-xs font-bold uppercase tracking-wider text-primary">{selectedCard?.tag ?? activeDeck.name}</p>
                     <p className="mt-3 whitespace-pre-line text-xl font-bold text-foreground">{selectedCard?.back ?? "Create a card to preview it."}</p>
                     <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                       <Sigma className="size-4" /> Equation-ready content
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-md border border-border bg-surface-tinted p-3">
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <span>Cards in deck</span>
+                      <span>{deckCards.length}</span>
+                    </div>
+                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                      {deckCards.map((card) => (
+                        <button key={card.id} onClick={() => setSelectedCardId(card.id)} className={`min-w-32 rounded-md border px-3 py-2 text-left text-xs font-semibold transition hover:-translate-y-0.5 ${selectedCardId === card.id ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-card-foreground"}`}>
+                          <span className="block truncate">{card.front}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-2">
@@ -445,12 +458,19 @@ const Index = () => {
 
               <button onClick={() => setFlipped((value) => !value)} className="study-perspective mt-5 block w-full text-left" aria-label="Interactive flashcard">
                 <div className={`study-card-inner relative min-h-72 rounded-md transition duration-500 motion-reduce:transition-none ${flipped ? "rotate-y-180" : ""}`}>
-                  <div className="study-card-face absolute inset-0 rounded-md border border-border bg-study-front p-6 text-primary-foreground shadow-soft">
+                  <div className="study-card-face absolute inset-0 overflow-hidden rounded-md border border-border bg-study-front p-6 text-primary-foreground shadow-soft">
+                    <div className="absolute -right-10 -top-10 size-32 rounded-full border border-primary-foreground/20" />
+                    <div className="absolute bottom-5 right-5 flex gap-1 opacity-50">
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse" />
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse [animation-delay:150ms]" />
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse [animation-delay:300ms]" />
+                    </div>
                     <p className="text-sm font-semibold opacity-80">Question</p>
                     <p className="mt-8 text-2xl font-bold leading-tight">{selectedCard?.front ?? "Create a card to study."}</p>
                     <p className="mt-10 text-sm opacity-80">Tap to reveal answer</p>
                   </div>
-                  <div className="study-card-face absolute inset-0 rotate-y-180 rounded-md border border-border bg-study-back p-6 text-primary-foreground shadow-soft">
+                  <div className="study-card-face absolute inset-0 rotate-y-180 overflow-hidden rounded-md border border-border bg-study-back p-6 text-primary-foreground shadow-soft">
+                    <div className="absolute -left-12 bottom-0 size-36 rounded-full border border-primary-foreground/20" />
                     <p className="text-sm font-semibold opacity-80">Answer</p>
                     <p className="mt-8 whitespace-pre-line text-2xl font-bold leading-tight">{selectedCard?.back ?? "No answer yet."}</p>
                   </div>
