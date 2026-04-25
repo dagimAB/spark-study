@@ -331,10 +331,20 @@ const Index = () => {
         </aside>
 
         <section className="relative z-10 flex-1 px-4 py-4 sm:px-6 lg:px-8">
-          <header className="flex flex-col gap-4 rounded-md border border-border bg-card/85 p-4 shadow-soft backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+          <header className="relative overflow-hidden rounded-md border border-border bg-card/85 p-4 shadow-soft backdrop-blur-xl">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-primary" />
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-semibold text-primary">Focused learning workspace</p>
+              <p className="inline-flex items-center gap-2 rounded-sm bg-primary/10 px-2 py-1 text-sm font-semibold text-primary"><Zap className="size-4" /> Focused learning workspace</p>
               <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl">Create, protect, and study rich flashcards.</h2>
+              <div className="mt-4 grid gap-2 sm:grid-cols-4">
+                {learningPath.map(({ label, icon: Icon }, index) => (
+                  <div key={label} className="group flex items-center gap-2 rounded-md border border-border bg-surface-raised px-3 py-2 text-sm font-bold text-foreground transition hover:-translate-y-0.5 hover:border-primary/50">
+                    <span className="grid size-7 place-items-center rounded-sm bg-secondary text-secondary-foreground transition group-hover:bg-primary group-hover:text-primary-foreground"><Icon className="size-4" /></span>
+                    <span>{index + 1}. {label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               <button onClick={handleUndo} className="inline-flex items-center gap-2 rounded-md border border-border bg-secondary px-3 py-2 text-sm font-semibold text-secondary-foreground transition hover:-translate-y-0.5 hover:shadow-card">
@@ -343,6 +353,7 @@ const Index = () => {
               <button onClick={addCard} className="inline-flex items-center gap-2 rounded-md bg-gradient-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:-translate-y-0.5">
                 <Plus className="size-4" /> New card
               </button>
+            </div>
             </div>
           </header>
 
@@ -374,17 +385,8 @@ const Index = () => {
               <div className="grid gap-4 p-4 lg:grid-cols-[1fr_1fr]">
                 <div className="rounded-md border border-border bg-surface-raised p-4">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
-                    {[
-                      { icon: Type, action: "type" },
-                      { icon: Italic, action: "italic" },
-                      { icon: List, action: "list" },
-                      { icon: Sigma, action: "equation" },
-                      { icon: Image, action: "image" },
-                      { icon: Volume2, action: "audio" },
-                      { icon: Undo2, action: "undo" },
-                      { icon: Redo2, action: "redo" },
-                    ].map(({ icon: Icon, action }) => (
-                      <button key={action} onClick={() => applyTool(action)} aria-label={`Editor ${action}`} className="rounded-md border border-border bg-card p-2 text-muted-foreground transition hover:-translate-y-0.5 hover:text-primary hover:shadow-card">
+                    {editorTools.map(({ icon: Icon, action, label }) => (
+                      <button key={action} onClick={() => applyTool(action)} title={label} aria-label={`Editor ${action}`} className="group rounded-md border border-border bg-card p-2 text-muted-foreground transition hover:-translate-y-0.5 hover:text-primary hover:shadow-card active:scale-95">
                         <Icon className="size-4" />
                       </button>
                     ))}
