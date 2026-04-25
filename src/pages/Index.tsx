@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeftRight,
+  Award,
   BarChart3,
   BookOpen,
   Brain,
@@ -11,6 +12,7 @@ import {
   Image,
   Italic,
   Keyboard,
+  Layers3,
   List,
   Moon,
   Plus,
@@ -22,10 +24,12 @@ import {
   Sparkles,
   Sun,
   Tags,
+  Target,
   Trash2,
   Type,
   Undo2,
   Volume2,
+  Zap,
   X,
 } from "lucide-react";
 
@@ -56,11 +60,29 @@ const initialCards = [
 
 const templates = ["Definition", "Formula", "Q&A", "Diagram"];
 
+const editorTools = [
+  { icon: Type, action: "type", label: "Key term" },
+  { icon: Italic, action: "italic", label: "Emphasis" },
+  { icon: List, action: "list", label: "List" },
+  { icon: Sigma, action: "equation", label: "Equation" },
+  { icon: Image, action: "image", label: "Image cue" },
+  { icon: Volume2, action: "audio", label: "Audio cue" },
+  { icon: Undo2, action: "undo", label: "Undo" },
+  { icon: Redo2, action: "redo", label: "Redo" },
+];
+
 const principles = [
   { title: "Safety", text: "Auto-save, undo/redo, restore history, and delete confirmation reduce costly mistakes." },
   { title: "Utility", text: "Rich text, equations, imagery, audio cues, tags, and templates support real coursework." },
   { title: "Efficiency", text: "One-click creation, shortcuts, smart templates, and inline editing minimize setup effort." },
   { title: "Effectiveness", text: "Flip, quiz, timed review, and spaced repetition address different learning strategies." },
+];
+
+const learningPath = [
+  { label: "Capture", icon: Layers3 },
+  { label: "Encode", icon: Brain },
+  { label: "Recall", icon: Target },
+  { label: "Master", icon: Award },
 ];
 
 const Index = () => {
@@ -93,6 +115,8 @@ const Index = () => {
   );
 
   const activeDeck = decks.find((deck) => deck.name === selectedDeck) ?? decks[0];
+  const deckCards = useMemo(() => cards.filter((card) => card.deck === selectedDeck), [cards, selectedDeck]);
+  const masteryOffset = 158 - (158 * (activeDeck?.progress ?? 0)) / 100;
 
   const stats = [
     { label: "Retention", value: `${retention}%`, icon: Brain },
@@ -139,6 +163,13 @@ const Index = () => {
     setDecks((currentDecks) => [...currentDecks, newDeck]);
     setSelectedDeck(deckName);
     setAutosaveText("New deck created");
+  };
+
+  const selectDeck = (deckName: string) => {
+    setSelectedDeck(deckName);
+    const firstCard = cards.find((card) => card.deck === deckName);
+    if (firstCard) setSelectedCardId(firstCard.id);
+    setFlipped(false);
   };
 
   const confirmDelete = () => {
@@ -200,9 +231,13 @@ const Index = () => {
   };
 
   return (
-    <main className="mlfi-shell min-h-screen text-foreground">
+    <main className="mlfi-shell min-h-screen overflow-hidden text-foreground">
+      <div className="pointer-events-none fixed inset-0 opacity-70">
+        <div className="absolute left-[8%] top-16 size-56 rounded-full bg-primary/10 blur-3xl animate-drift" />
+        <div className="absolute bottom-10 right-[10%] size-72 rounded-full bg-accent/10 blur-3xl animate-drift-delayed" />
+      </div>
       <div className="mx-auto flex min-h-screen w-full max-w-[1500px] flex-col lg:flex-row">
-        <aside className="border-b border-border/70 bg-sidebar/90 px-4 py-4 backdrop-blur-xl lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
+        <aside className="relative z-10 border-b border-border/70 bg-sidebar/90 px-4 py-4 backdrop-blur-xl lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="grid size-11 place-items-center rounded-md bg-gradient-primary text-primary-foreground shadow-soft">
@@ -242,7 +277,7 @@ const Index = () => {
             {filteredDecks.map((deck) => (
               <button
                 key={deck.name}
-                onClick={() => setSelectedDeck(deck.name)}
+                onClick={() => selectDeck(deck.name)}
                 className={`group w-full rounded-md border p-3 text-left shadow-card transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-soft ${
                   selectedDeck === deck.name ? "border-primary bg-secondary" : "border-border bg-card"
                 }`}
@@ -265,6 +300,22 @@ const Index = () => {
             ))}
           </div>
 
+          <div className="mt-7 overflow-hidden rounded-md border border-border bg-gradient-card p-4 shadow-card">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Mastery ring</p>
+                <p className="mt-1 text-sm font-semibold text-foreground">{activeDeck?.name}</p>
+              </div>
+              <div className="relative size-16">
+                <svg className="size-16 -rotate-90" viewBox="0 0 60 60" aria-hidden="true">
+                  <circle cx="30" cy="30" r="25" className="fill-none stroke-muted" strokeWidth="7" />
+                  <circle cx="30" cy="30" r="25" className="fill-none stroke-primary transition-all duration-700" strokeWidth="7" strokeDasharray="158" strokeDashoffset={masteryOffset} strokeLinecap="round" />
+                </svg>
+                <span className="absolute inset-0 grid place-items-center text-sm font-black text-foreground">{activeDeck?.progress}%</span>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-7 rounded-md border border-border bg-gradient-card p-4 shadow-card">
             <div className="flex items-center gap-2 text-sm font-bold text-foreground">
               <Keyboard className="size-4 text-primary" />
@@ -279,11 +330,21 @@ const Index = () => {
           </div>
         </aside>
 
-        <section className="flex-1 px-4 py-4 sm:px-6 lg:px-8">
-          <header className="flex flex-col gap-4 rounded-md border border-border bg-card/85 p-4 shadow-soft backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+        <section className="relative z-10 flex-1 px-4 py-4 sm:px-6 lg:px-8">
+          <header className="relative overflow-hidden rounded-md border border-border bg-card/85 p-4 shadow-soft backdrop-blur-xl">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-primary" />
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-semibold text-primary">Focused learning workspace</p>
+              <p className="inline-flex items-center gap-2 rounded-sm bg-primary/10 px-2 py-1 text-sm font-semibold text-primary"><Zap className="size-4" /> Focused learning workspace</p>
               <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl">Create, protect, and study rich flashcards.</h2>
+              <div className="mt-4 grid gap-2 sm:grid-cols-4">
+                {learningPath.map(({ label, icon: Icon }, index) => (
+                  <div key={label} className="group flex items-center gap-2 rounded-md border border-border bg-surface-raised px-3 py-2 text-sm font-bold text-foreground transition hover:-translate-y-0.5 hover:border-primary/50">
+                    <span className="grid size-7 place-items-center rounded-sm bg-secondary text-secondary-foreground transition group-hover:bg-primary group-hover:text-primary-foreground"><Icon className="size-4" /></span>
+                    <span>{index + 1}. {label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               <button onClick={handleUndo} className="inline-flex items-center gap-2 rounded-md border border-border bg-secondary px-3 py-2 text-sm font-semibold text-secondary-foreground transition hover:-translate-y-0.5 hover:shadow-card">
@@ -292,6 +353,7 @@ const Index = () => {
               <button onClick={addCard} className="inline-flex items-center gap-2 rounded-md bg-gradient-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:-translate-y-0.5">
                 <Plus className="size-4" /> New card
               </button>
+            </div>
             </div>
           </header>
 
@@ -323,17 +385,8 @@ const Index = () => {
               <div className="grid gap-4 p-4 lg:grid-cols-[1fr_1fr]">
                 <div className="rounded-md border border-border bg-surface-raised p-4">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
-                    {[
-                      { icon: Type, action: "type" },
-                      { icon: Italic, action: "italic" },
-                      { icon: List, action: "list" },
-                      { icon: Sigma, action: "equation" },
-                      { icon: Image, action: "image" },
-                      { icon: Volume2, action: "audio" },
-                      { icon: Undo2, action: "undo" },
-                      { icon: Redo2, action: "redo" },
-                    ].map(({ icon: Icon, action }) => (
-                      <button key={action} onClick={() => applyTool(action)} aria-label={`Editor ${action}`} className="rounded-md border border-border bg-card p-2 text-muted-foreground transition hover:-translate-y-0.5 hover:text-primary hover:shadow-card">
+                    {editorTools.map(({ icon: Icon, action, label }) => (
+                      <button key={action} onClick={() => applyTool(action)} title={label} aria-label={`Editor ${action}`} className="group rounded-md border border-border bg-card p-2 text-muted-foreground transition hover:-translate-y-0.5 hover:text-primary hover:shadow-card active:scale-95">
                         <Icon className="size-4" />
                       </button>
                     ))}
@@ -361,11 +414,24 @@ const Index = () => {
                     <h4 className="font-bold text-foreground">Live preview</h4>
                     <span className="rounded-sm bg-accent px-2 py-1 text-xs font-bold text-accent-foreground">{selectedTemplate}</span>
                   </div>
-                  <div className="mt-4 rounded-md border border-border bg-card p-5 shadow-card">
+                  <div className="mt-4 rounded-md border border-border bg-card p-5 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-soft">
                     <p className="text-xs font-bold uppercase tracking-wider text-primary">{selectedCard?.tag ?? activeDeck.name}</p>
                     <p className="mt-3 whitespace-pre-line text-xl font-bold text-foreground">{selectedCard?.back ?? "Create a card to preview it."}</p>
                     <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                       <Sigma className="size-4" /> Equation-ready content
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-md border border-border bg-surface-tinted p-3">
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <span>Cards in deck</span>
+                      <span>{deckCards.length}</span>
+                    </div>
+                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                      {deckCards.map((card) => (
+                        <button key={card.id} onClick={() => setSelectedCardId(card.id)} className={`min-w-32 rounded-md border px-3 py-2 text-left text-xs font-semibold transition hover:-translate-y-0.5 ${selectedCardId === card.id ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-card-foreground"}`}>
+                          <span className="block truncate">{card.front}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-2">
@@ -392,12 +458,19 @@ const Index = () => {
 
               <button onClick={() => setFlipped((value) => !value)} className="study-perspective mt-5 block w-full text-left" aria-label="Interactive flashcard">
                 <div className={`study-card-inner relative min-h-72 rounded-md transition duration-500 motion-reduce:transition-none ${flipped ? "rotate-y-180" : ""}`}>
-                  <div className="study-card-face absolute inset-0 rounded-md border border-border bg-study-front p-6 text-primary-foreground shadow-soft">
+                  <div className="study-card-face absolute inset-0 overflow-hidden rounded-md border border-border bg-study-front p-6 text-primary-foreground shadow-soft">
+                    <div className="absolute -right-10 -top-10 size-32 rounded-full border border-primary-foreground/20" />
+                    <div className="absolute bottom-5 right-5 flex gap-1 opacity-50">
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse" />
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse [animation-delay:150ms]" />
+                      <span className="size-2 rounded-full bg-primary-foreground animate-pulse [animation-delay:300ms]" />
+                    </div>
                     <p className="text-sm font-semibold opacity-80">Question</p>
                     <p className="mt-8 text-2xl font-bold leading-tight">{selectedCard?.front ?? "Create a card to study."}</p>
                     <p className="mt-10 text-sm opacity-80">Tap to reveal answer</p>
                   </div>
-                  <div className="study-card-face absolute inset-0 rotate-y-180 rounded-md border border-border bg-study-back p-6 text-primary-foreground shadow-soft">
+                  <div className="study-card-face absolute inset-0 rotate-y-180 overflow-hidden rounded-md border border-border bg-study-back p-6 text-primary-foreground shadow-soft">
+                    <div className="absolute -left-12 bottom-0 size-36 rounded-full border border-primary-foreground/20" />
                     <p className="text-sm font-semibold opacity-80">Answer</p>
                     <p className="mt-8 whitespace-pre-line text-2xl font-bold leading-tight">{selectedCard?.back ?? "No answer yet."}</p>
                   </div>
