@@ -231,9 +231,13 @@ const Index = () => {
   };
 
   return (
-    <main className="mlfi-shell min-h-screen text-foreground">
+    <main className="mlfi-shell min-h-screen overflow-hidden text-foreground">
+      <div className="pointer-events-none fixed inset-0 opacity-70">
+        <div className="absolute left-[8%] top-16 size-56 rounded-full bg-primary/10 blur-3xl animate-drift" />
+        <div className="absolute bottom-10 right-[10%] size-72 rounded-full bg-accent/10 blur-3xl animate-drift-delayed" />
+      </div>
       <div className="mx-auto flex min-h-screen w-full max-w-[1500px] flex-col lg:flex-row">
-        <aside className="border-b border-border/70 bg-sidebar/90 px-4 py-4 backdrop-blur-xl lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
+        <aside className="relative z-10 border-b border-border/70 bg-sidebar/90 px-4 py-4 backdrop-blur-xl lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="grid size-11 place-items-center rounded-md bg-gradient-primary text-primary-foreground shadow-soft">
@@ -273,7 +277,7 @@ const Index = () => {
             {filteredDecks.map((deck) => (
               <button
                 key={deck.name}
-                onClick={() => setSelectedDeck(deck.name)}
+                onClick={() => selectDeck(deck.name)}
                 className={`group w-full rounded-md border p-3 text-left shadow-card transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-soft ${
                   selectedDeck === deck.name ? "border-primary bg-secondary" : "border-border bg-card"
                 }`}
@@ -296,6 +300,22 @@ const Index = () => {
             ))}
           </div>
 
+          <div className="mt-7 overflow-hidden rounded-md border border-border bg-gradient-card p-4 shadow-card">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Mastery ring</p>
+                <p className="mt-1 text-sm font-semibold text-foreground">{activeDeck?.name}</p>
+              </div>
+              <div className="relative size-16">
+                <svg className="size-16 -rotate-90" viewBox="0 0 60 60" aria-hidden="true">
+                  <circle cx="30" cy="30" r="25" className="fill-none stroke-muted" strokeWidth="7" />
+                  <circle cx="30" cy="30" r="25" className="fill-none stroke-primary transition-all duration-700" strokeWidth="7" strokeDasharray="158" strokeDashoffset={masteryOffset} strokeLinecap="round" />
+                </svg>
+                <span className="absolute inset-0 grid place-items-center text-sm font-black text-foreground">{activeDeck?.progress}%</span>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-7 rounded-md border border-border bg-gradient-card p-4 shadow-card">
             <div className="flex items-center gap-2 text-sm font-bold text-foreground">
               <Keyboard className="size-4 text-primary" />
@@ -310,7 +330,7 @@ const Index = () => {
           </div>
         </aside>
 
-        <section className="flex-1 px-4 py-4 sm:px-6 lg:px-8">
+        <section className="relative z-10 flex-1 px-4 py-4 sm:px-6 lg:px-8">
           <header className="flex flex-col gap-4 rounded-md border border-border bg-card/85 p-4 shadow-soft backdrop-blur-xl md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm font-semibold text-primary">Focused learning workspace</p>
